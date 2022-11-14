@@ -42,14 +42,21 @@ def serial_reader(port, bit_rate, data_bits, parity_bit, stop_bits, event):
 		if event.is_set():
 			break
 		try:
-			string = s.readline()
-			try:
-				string = string.decode().strip()
-				if string != "":
-					print("[SERIAL]:", string)
-					eel.set_text(string)
-			except UnicodeDecodeError:
-				print("[ERROR]:", string)
+			string = ""
+			while True:
+				symbol = s.readline()
+				try:
+					symbol = symbol.decode()
+					string += symbol
+					if symbol.endswith("\n"):
+						break
+				except UnicodeDecodeError:
+					print("[ERROR]:", symbol)
+
+			string = string.strip()
+			if string != "":
+				print("[SERIAL]:", string)
+				eel.set_text(string)
 		except serial.serialutil.SerialException:
 			eel.device_lost()
 			break
