@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Serial projector</title>
+	<link rel="icon" type="image/png" href="./img/icon128.png">
+	<script src="eel.js"></script>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+
+	<script src="./js/jquery-2.1.4.min.js"></script>
+	<script src="https://kit.fontawesome.com/a9e455503e.js" crossorigin="anonymous"></script>
+	<script src="./js/script.js"></script>
+
+	<link rel="stylesheet" href="./css/reset.css">
+	<link rel="stylesheet" type="text/css" href="./css/style.css">
+</head>
+
+<body>
+	<div id="wrap">
+		<h1 id="output_value">
+			Hello, world!
+		</h1>
+	</div>
+	<aside id="menu">
+		<!-- <div class="btn btn-fullscreen" title="Fullscreen" onclick="open_close_modal_settings(this)"
+			btn-name="fullscreen"></div> -->
+		<div class="btn btn-connection" title="Connection" onclick="open_close_modal_settings(this)" btn-name="connection">
+		</div>
+		<div class="btn btn-settings" title="Settings" onclick="open_close_modal_settings(this)" btn-name="settings">
+		</div>
+		<div class="btn btn-about" title="About" onclick="open_close_modal_settings(this)" btn-name="about"></div>
+	</aside>
+	<aside id="connection" class="popup">
+		<table class="form">
+			<tbody>
+				<tr>
+					<th><label for="port">Port:</label></th>
+					<td>
+						<select id="port" name="port">
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th><label for="bitrate">Bit Rate:</label></th>
+					<td>
+						<select id="bitrate" name="bitrate">
+							<option value="9600" selected>9600</option>
+							<option value="19200">19200</option>
+							<option value="38400">38400</option>
+							<option value="57600">57600</option>
+							<option value="115200">115200</option>
+						</select>
+						baud
+					</td>
+				</tr>
+				<tr>
+					<th><label for="dataBits">Data Bits:</label></th>
+					<td>
+						<select id="dataBits" name="dataBits">
+							<option value="7">Seven</option>
+							<option value="8" selected>Eight</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th><label for="parityBit">Parity Bit:</label></th>
+					<td>
+						<select id="parityBit" name="parityBit">
+							<option value="no" selected>No</option>
+							<option value="odd">Odd</option>
+							<option value="even">Even</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th><label for="stopBits">Stop Bits:</label></th>
+					<td>
+						<select id="stopBits" name="stopBits">
+							<option value="one" selected>One</option>
+							<option value="two">Two</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<th></th>
+					<td>
+						<button id="connect" title="Turn autoconnection on [Space]" onclick="connect()">Connect</button>
+						<button id="stop-connection" title="Disconnect and turn autoconnection off [Space]" onclick="disconnect()"
+							style="display: none;">Stop</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</aside>
+	<aside id="settings" class="popup">
+		<table class="form">
+			<tbody>
+				<tr>
+					<th><label for="font-size">Font Size:</label></th>
+					<td><input id="font-size" type="number" name="font-size" min="1" max="100" value="5"></td>
+					<td>vw</td>
+				</tr>
+				<tr>
+					<th><label for="text-color">Text Color:</label></th>
+					<td><input id="text-color" type="color" name="text-color" value="#ffffff"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<th><label for="bg-color">BG Color:</label></th>
+					<td><input id="bg-color" type="color" name="bg-color" value="#00979c"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<th></th>
+					<td><button id="apply-settings" onclick="reset_settings()">Reset</button></td>
+					<td><button id="apply-settings" onclick="eel.save_config(settings)()">Save</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</aside>
+	<aside id="about" class="popup">
+		<p>
+			Serial Projector is made by
+			<a href="https://github.com/Grigoriy457" target="_blank">Grigoriy Vlasov</a> and
+			<a href="http://amperka.ru" target="_blank">Amperka LLC</a>.
+			From Russia with <i class="fa fa-heart" aria-hidden="true"></i> for better education.
+		</p>
+		<p>
+			Icons by <a href="http://fortawesome.github.io/Font-Awesome/" target="_blank">Font Awesome</a>.
+		</p>
+		<p>
+			Application is distributed as is without any warranties on terms of MIT License.
+			<a href="https://github.com/amperka/serial-projector" target="_blank">Source code</a> is available on GitHub.
+		</p>
+	</aside>
+</body>
+
+<script>
+	var main_settings = {
+		"font-size": "5vw",
+		"text-color": "#ffffff",
+		"bg-color": "#00979c",
+	};
+	var settings = Object.assign({}, main_settings);
+	reset_settings();
+
+	$('body').on('input', 'input#font-size', function () {
+		settings["font-size"] = this.value + "vw";
+		set_settings();
+	});
+
+	$('body').on('input', 'input#text-color', function () {
+		settings["text-color"] = this.value;
+		set_settings();
+	});
+
+	$('body').on('input', 'input#bg-color', function () {
+		settings["bg-color"] = this.value;
+		set_settings();
+	});
+</script>
+
+</html>
