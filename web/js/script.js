@@ -1,3 +1,6 @@
+var is_clicked_in_menu = false;
+
+
 function set_settings() {
      var elem = document.getElementById("wrap");
      elem.style.fontSize = settings["font-size"];
@@ -6,7 +9,6 @@ function set_settings() {
 }
 
 function reset_settings() {
-     console.log("Main:", main_settings);
      settings = Object.assign({}, main_settings);
      document.getElementById("font-size").value = settings["font-size"].slice(0, -2);
      document.getElementById("text-color").value = settings["text-color"];
@@ -14,7 +16,23 @@ function reset_settings() {
      set_settings();
 }
 
+function clicked_on_menu() {
+     is_clicked_in_menu = true;
+}
+
 function open_close_modal_settings(btn) {
+     if (btn == null) {
+          console.log(is_clicked_in_menu)
+          if (is_clicked_in_menu) {
+               is_clicked_in_menu = false;
+               return;
+          }
+          for (var i of ["connection", "settings", "about"]) {
+               document.getElementById(i).style.display = "none";
+          }
+          return;
+     }
+     is_clicked_in_menu = true;
      var name = btn.getAttribute("btn-name");
      
      var now_selected = null;
@@ -55,7 +73,7 @@ function check_ports() {
                ports_elem.add(option, null);
                ports_elem.disabled = true;
           } else {
-               for (var i of Array(ports)) {
+               for (var i of ports) {
                     var option = document.createElement("option")
                     option.text = i;
                     option.value = i;

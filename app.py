@@ -7,8 +7,8 @@ import os
 
 
 
-event = None
 
+event = None
 
 
 @eel.expose
@@ -39,19 +39,21 @@ def serial_reader(port, bit_rate, data_bits, parity_bit, stop_bits, event):
 		eel.cant_connect()
 		return
 	while True:
-		if event.is_set():
-			break
 		try:
 			string = ""
 			while True:
-				symbol = s.readline()
-				try:
-					symbol = symbol.decode()
-					string += symbol
-					if symbol.endswith("\n"):
-						break
-				except UnicodeDecodeError:
-					print("[ERROR]:", symbol)
+				if event.is_set():
+					s.close()
+					return
+				if s.in_waiting != 0:
+					symbol = s.readline()
+					try:
+						symbol = symbol.decode()
+						string += symbol
+						if symbol.endswith("\n"):
+							break
+					except UnicodeDecodeError:
+						print("[ERROR]:", symbol)
 
 			string = string.strip()
 			if string != "":
@@ -81,6 +83,7 @@ def py_disconnect():
 
 	if event is not None:
 		event.set()
+		eel.sleep(0.05)
 	return 1
 
 
@@ -91,4 +94,4 @@ def close_callback(route, websockets):
 
 if __name__ == '__main__':
 	eel.init('web')
-	eel.start('main.html', size=(800, 500), close_callback=close_callback)
+	eel.start('main.html', size=(800, 500), close_callback=close_callback, port=8080)

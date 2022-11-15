@@ -19,7 +19,7 @@
 	<link rel="stylesheet" type="text/css" href="./css/style.css">
 </head>
 
-<body>
+<body onclick="open_close_modal_settings(null)">
 	<div id="wrap">
 		<h1 id="output_value">
 			Hello, world!
@@ -28,13 +28,14 @@
 	<aside id="menu">
 		<!-- <div class="btn btn-fullscreen" title="Fullscreen" onclick="open_close_modal_settings(this)"
 			btn-name="fullscreen"></div> -->
-		<div class="btn btn-connection" title="Connection" onclick="open_close_modal_settings(this)" btn-name="connection">
+		<div class="btn btn-connection" title="Connection" onclick="open_close_modal_settings(this)"
+			btn-name="connection">
 		</div>
 		<div class="btn btn-settings" title="Settings" onclick="open_close_modal_settings(this)" btn-name="settings">
 		</div>
 		<div class="btn btn-about" title="About" onclick="open_close_modal_settings(this)" btn-name="about"></div>
 	</aside>
-	<aside id="connection" class="popup">
+	<aside id="connection" class="popup" onclick="clicked_on_menu()">
 		<table class="form">
 			<tbody>
 				<tr>
@@ -88,15 +89,16 @@
 				<tr>
 					<th></th>
 					<td>
-						<button id="connect" title="Turn autoconnection on [Space]" onclick="connect()">Connect</button>
-						<button id="stop-connection" title="Disconnect and turn autoconnection off [Space]" onclick="disconnect()"
-							style="display: none;">Stop</button>
+						<button id="connect" title="Turn autoconnection on [Space]"
+							onclick="connect()">Connect</button>
+						<button id="stop-connection" title="Disconnect and turn autoconnection off [Space]"
+							onclick="disconnect()" style="display: none;">Stop</button>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 	</aside>
-	<aside id="settings" class="popup">
+	<aside id="settings" class="popup" onclick="clicked_on_menu()">
 		<table class="form">
 			<tbody>
 				<tr>
@@ -117,12 +119,11 @@
 				<tr>
 					<th></th>
 					<td><button id="apply-settings" onclick="reset_settings()">Reset</button></td>
-					<td><button id="apply-settings" onclick="eel.save_config(settings)()">Save</button></td>
 				</tr>
 			</tbody>
 		</table>
 	</aside>
-	<aside id="about" class="popup">
+	<aside id="about" class="popup" onclick="clicked_on_menu()">
 		<p>
 			Serial Projector is made by
 			<a href="https://github.com/Grigoriy457" target="_blank">Grigoriy Vlasov</a> and
@@ -134,7 +135,8 @@
 		</p>
 		<p>
 			Application is distributed as is without any warranties on terms of MIT License.
-			<a href="https://github.com/Grigoriy457/python-serial-projector" target="_blank">Source code</a> is available on
+			<a href="https://github.com/Grigoriy457/python-serial-projector" target="_blank">Source code</a> is
+			available on
 			GitHub.
 		</p>
 	</aside>
