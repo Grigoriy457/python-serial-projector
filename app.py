@@ -2,37 +2,36 @@ import eel
 import serial
 from serial.tools import list_ports
 import threading
-import json
-import os
 import requests
 import webbrowser
+import atexit
+from pydantic.v1.typing import Optional
 
 
 REPOS_OWNER = "Grigoriy457"
 REPOS_NAME = "python-serial-projector"
-VERSION = 1.1
-event = None
-
+VERSION = (1, 2)
+event: Optional[threading.Event] = None
 
 
 @eel.expose
 def check_for_update():
 	response = requests.get(f"https://api.github.com/repos/{REPOS_OWNER}/{REPOS_NAME}/tags")
 	if response.status_code == 200:
-		last_ver = float(response.json()[0]["name"][1:])
+		last_ver = tuple(map(int, response.json()[0]["name"][1:].split(".")))
 		print("Latest version:", last_ver)
-		return (last_ver > VERSION, last_ver)
-	return (False, VERSION)
+		return last_ver > VERSION, last_ver
+	return False, VERSION
 
 
 @eel.expose
-def open_last_version(version):
-	webbrowser.open_new(f"https://github.com/{REPOS_OWNER}/{REPOS_NAME}/releases/tag/v{version}")
+def open_last_version(version: tuple):
+	webbrowser.open_new(f"https://github.com/{REPOS_OWNER}/{REPOS_NAME}/releases/tag/v{'.'.join(map(str, version))}")
 
 
 @eel.expose
 def get_com_list():
-	com_list = [str(i) for i in list_ports.comports()]
+	com_list = [i.name for i in list_ports.comports()]
 	return com_list
 
 
@@ -83,7 +82,6 @@ def serial_reader(port, bit_rate, data_bits, parity_bit, stop_bits, event):
 			break
 
 
-
 @eel.expose
 def py_connect(port, bit_rate, data_bits, parity_bit, stop_bits):
 	global event
@@ -98,8 +96,6 @@ def py_connect(port, bit_rate, data_bits, parity_bit, stop_bits):
 
 @eel.expose
 def py_disconnect():
-	global event
-
 	if event is not None:
 		event.set()
 		eel.sleep(0.05)
@@ -113,4 +109,6 @@ def close_callback(route, websockets):
 
 if __name__ == '__main__':
 	eel.init('web')
-	eel.start('main.html', size=(800, 500), close_callback=close_callback, port=8080)
+	eel.start('main.html', size=(800, 500), close_callback=close_callback, port=18080)
+
+	atexit.register(lambda: eel.close_window())

@@ -140,3 +140,8 @@ eel.expose(set_text);
 function set_text(string) {
      document.getElementById("wrap").innerHTML = `<h1>${string}</h1>`;
 }
+
+eel.expose(close_window)
+function close_window() {
+    window.close()
+}
