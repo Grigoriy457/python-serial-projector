@@ -1,0 +1,9 @@
+/app.spec
+/build.bat
+/test/
+/serial-projector-master/
+/dist/
+/build/
+/.idea
+/__pycache__/
+/venv/
